@@ -8,7 +8,7 @@
 - Sales History: View detailed sales history reports by day, week, or month.
 - Intelligent Reordering Suggestions: The system will observe product sales trends over time and offer re-ordering suggestions. An AI tool will provide suggestions on when and how much to reorder, to minimize unsold inventory or stockouts.
 - Admin Panel: Admin panel to manage inventory, categories, coupons, analytics, and access over sale.
-- Manager Panel: Manager panel to manage the datas. multivendor mechanism
+- Manager Panel: Manager panel to manage the datas. multivendor mechanism.
 
 ## Style Guidelines:
 
