@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanPOS - Professional ER Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6a5acd; /* SlateBlue */
+            --secondary: #483d8b; /* DarkSlateBlue */
+            --accent: #8a2be2; /* BlueViolet */
+            --success: #32cd32; /* LimeGreen */
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --dark: #2f3542;
+            --light: #f1f2f6;
+            --gray: #57606f;
+            --text: #2f3542;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #dfe4ea;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease;
+        }
+
+        body.sidebar-open {
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 25px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(106, 90, 205, 0.3);
+            color: white;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .sidebar-toggle {
+            display: none; /* Hidden by default */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .dashboard {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid var(--border);
+            height: fit-content;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 35px;
+        }
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-title i {
+            font-size: 1.4rem;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid var(--border);
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: left;
+        }
+        
+        .btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.2);
+        }
+        
+        .btn i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3);
+        }
+        
+        .main-content {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .panel {
+            display: none; /* All panels hidden by default */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .panel.active {
+            display: block; /* JS will toggle this class */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .details-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid var(--border);
+            min-height: 800px;
+        }
+        
+        #mermaid-diagram, #cy-container {
+            width: 100%;
+            height: 100%;
+            min-height: 700px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+        
+        .panel-header {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .panel-subtitle {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .entity-details, .relationship-details, .schema-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .entity-card, .relationship-card, .schema-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .entity-card { border-left: 5px solid var(--accent); }
+        .relationship-card { border-left: 5px solid var(--success); }
+
+        .firestore-note {
+            background: linear-gradient(135deg, rgba(106, 90, 205, 0.1), rgba(72, 61, 139, 0.1));
+            border-left: 5px solid var(--primary);
+            padding: 25px;
+            margin-top: 25px;
+            border-radius: 15px;
+        }
+
+        .schema-list, .firestore-note ul {
+            list-style-position: inside;
+            padding-left: 0;
+        }
+
+        .schema-list li, .firestore-note ul li {
+            margin-bottom: 10px;
+        }
+
+        .schema-list li::marker, .firestore-note ul li::marker {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .legend-container {
+            margin-top: 30px;
+        }
+        .legend-card {
+            display: none; /* Hidden by default */
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px 30px;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.5s ease;
+        }
+        .legend-card.active {
+            display: block;
+        }
+        .legend-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .legend-card dl {
+            display: grid;
+            grid-template-columns: max-content auto;
+            gap: 12px 20px;
+            align-items: center;
+        }
+        .legend-card dt {
+            font-weight: bold;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-self: start;
+        }
+        .legend-card dd {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        .legend-card code {
+            background: var(--light);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.1em;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        body.sidebar-open .sidebar-overlay {
+            display: block;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                margin-bottom: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 300px;
+                z-index: 1000;
+                transform: translateX(-100%);
+                border-radius: 0;
+                overflow-y: auto;
+            }
+            body.sidebar-open .sidebar {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .panel-header {
+                font-size: 1.5rem;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay"></div>
+    <div class="container">
+        <header>
+            <button class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+            <h1>UrbanPOS ERD</h1>
+            <p class="subtitle">Professional Database Schema Visualization</p>
+        </header>
+        
+        <div class="dashboard">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title"><i class="fas fa-binoculars"></i> Views</h3>
+                    <div class="controls">
+                        <button class="btn active" data-target="mermaid-panel">
+                            <i class="fas fa-project-diagram"></i> Mermaid ERD
+                        </button>
+                        <button class="btn" data-target="detailed-erd-panel">
+                            <i class="fas fa-sitemap"></i> Detailed ERD
+                        </button>
+                        <button class="btn" data-target="schema-details-panel">
+                            <i class="fas fa-list-alt"></i> Schema Details
+                        </button>
+                        <button class="btn" data-target="system-architecture-panel">
+                            <i class="fas fa-cogs"></i> System Architecture
+                        </button>
+                        <button class="btn" data-target="entities-panel">
+                            <i class="fas fa-table"></i> Entity Details
+                        </button>
+                        <button class="btn" data-target="relationships-panel">
+                            <i class="fas fa-code-branch"></i> Relationships
+                        </button>
+                        <button class="btn" data-target="firestore-panel">
+                            <i class="fas fa-database"></i> Firestore Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-content">
+
+                <div class="panel active" id="mermaid-panel">
+                    <div class="details-panel">
+                         <h2 class="panel-header"><i class="fas fa-project-diagram"></i> Mermaid ERD</h2>
+                         <p class="panel-subtitle">A simple, text-based Entity Relationship Diagram.</p>
+                         <div id="mermaid-diagram"></div>
+                    </div>
+                </div>
+
+                <div class="panel" id="detailed-erd-panel">
+                    <div class="details-panel">
+                         <h2 class="panel-header"><i class="fas fa-sitemap"></i> Detailed ERD</h2>
+                         <p class="panel-subtitle">A detailed, interactive visualization of the database schema.</p>
+                         <div id="cy-container"></div>
+                    </div>
+                </div>
+
+                <div class="panel" id="schema-details-panel">
+                    <div class="details-panel">
+                        <h2 class="panel-header"><i class="fas fa-list-alt"></i> Schema Details</h2>
+                        <p class="panel-subtitle">Complete schema information for UrbanPOS Firestore database.</p>
+                        <div class="schema-grid">
+                            <div class="schema-card">
+                                <h3>Collections</h3>
+                                <ul class="schema-list">
+                                    <li><strong>products</strong> - Inventory items</li>
+                                    <li><strong>categories</strong> - Product groupings</li>
+                                    <li><strong>sales</strong> - Transaction records</li>
+                                    <li><strong>coupons</strong> - Promotional codes</li>
+                                    <li><strong>accessKeys</strong> - Authentication tokens</li>
+                                    <li><strong>exchangeRates</strong> - Currency data</li>
+                                </ul>
+                            </div>
+                            <div class="schema-card">
+                                <h3>Singletons</h3>
+                                <ul class="schema-list">
+                                    <li><strong>settings</strong> - Global configuration</li>
+                                </ul>
+                            </div>
+                            <div class="schema-card">
+                                <h3>Key Relationships</h3>
+                                <ul class="schema-list">
+                                    <li>Products → Categories (N:1)</li>
+                                    <li>Sales → Products (M:N)</li>
+                                    <li>Sales → Coupons (N:0..1)</li>
+                                </ul>
+                            </div>
+                            <div class="schema-card">
+                                <h3>Firestore Structure</h3>
+                                <ul class="schema-list">
+                                    <li>Top-level collections</li>
+                                    <li>Embedded arrays for relationships</li>
+                                    <li>Document IDs as primary keys</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" id="system-architecture-panel">
+                    <div class="details-panel">
+                        <h2 class="panel-header"><i class="fas fa-cogs"></i> System Architecture</h2>
+                        <p class="panel-subtitle">An overview of the system's data flow and architecture.</p>
+                        <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%;
+                        padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
+                        border-radius: 8px; will-change: transform;">
+                         <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+                           src="https://www.canva.com/design/DAG2NVuD-3w/Qpw35fYgyiq5dNC6LXjYMA/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+                         </iframe>
+                       </div>
+                    </div>
+                </div>
+                
+                <div class="panel" id="entities-panel">
+                    <div class="details-panel">
+                        <h2 class="panel-header"><i class="fas fa-table"></i> Entity Details</h2>
+                        <p class="panel-subtitle">Detailed breakdown of each data entity and its attributes.</p>
+                        <div class="entity-details"></div>
+                    </div>
+                </div>
+                
+                <div class="panel" id="relationships-panel">
+                    <div class="details-panel">
+                        <h2 class="panel-header"><i class="fas fa-code-branch"></i> Relationship Details</h2>
+                        <p class="panel-subtitle">Analysis of the connections and cardinality between entities.</p>
+                        <div class="relationship-details"></div>
+                    </div>
+                </div>
+                
+                <div class="panel" id="firestore-panel">
+                    <div class="details-panel">
+                        <h2 class="panel-header"><i class="fas fa-database"></i> Firestore Implementation</h2>
+                        <p class="panel-subtitle">How the conceptual ERD translates to a NoSQL Firestore structure.</p>
+                        <div class="firestore-note">
+                            <div class="note-header"><i class="fas fa-info-circle"></i> Implementation Notes</div>
+                            <ul>
+                                <li><strong>Embedded Relationships:</strong> The `SALES.items` array stores flattened product information to maintain snapshot integrity of transactions.</li>
+                                <li><strong>Denormalization:</strong> Coupon details and tax values are stored at transaction time to prevent stale recalculations.</li>
+                                <li><strong>Singleton Documents:</strong> `SETTINGS` and `EXCHANGE RATES` act as singleton documents, not large collections.</li>
+                                <li><strong>Security Rules:</strong> Firestore security rules are crucial to control data access based on user roles (not shown here).</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-top: 30px;">
+                            <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 1.5rem;">Example Collection Structures</h3>
+                            <div class="entity-details">
+                                <div class="entity-card">
+                                    <div class="entity-header">
+                                        <div class="entity-name">Products</div>
+                                        <div class="entity-type">Collection</div>
+                                    </div>
+                                    <div class="entity-attr"><span class="attr-name">Document ID</span><span class="attr-type pk">Auto-generated</span></div>
+                                    <div class="entity-attr"><span class="attr-name">Fields</span><span class="attr-type">name, categoryId, price, etc.</span></div>
+                                </div>
+                                <div class="entity-card">
+                                    <div class="entity-header">
+                                        <div class="entity-name">Sales</div>
+                                        <div class="entity-type">Collection</div>
+                                    </div>
+                                    <div class="entity-attr"><span class="attr-name">Document ID</span><span class="attr-type pk">Auto-generated</span></div>
+                                    <div class="entity-attr"><span class="attr-name">Fields</span><span class="attr-type">saleDate, totalAmount, items[], etc.</span></div>
+                                </div>
+                                <div class="entity-card">
+                                    <div class="entity-header">
+                                        <div class="entity-name">Settings</div>
+                                        <div class="entity-type">Singleton</div>
+                                    </div>
+                                    <div class="entity-attr"><span class="attr-name">Document ID</span><span class="attr-type pk">'''store-settings'''</span></div>
+                                    <div class="entity-attr"><span class="attr-name">Fields</span><span class="attr-type">storeName, defaultTaxRate, etc.</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="legend-container">
+                <div class="legend-card active" id="mermaid-legend">
+                    <h2><i class="fas fa-project-diagram"></i> Mermaid ERD Legend</h2>
+                    <dl>
+                        <dt><code>||</code></dt><dd>One (and only one)</dd>
+                        <dt><code>|o</code></dt><dd>Zero or one</dd>
+                        <dt><code>}{</code></dt><dd>Many</dd>
+                        <dt><code>|{</code></dt><dd>One or many</dd>
+                        <dt><code>o{</code></dt><dd>Zero or many</dd>
+                    </dl>
+                </div>
+                <div class="legend-card" id="detailed-erd-legend">
+                    <h2><i class="fas fa-sitemap"></i> Detailed ERD Legend</h2>
+                    <dl>
+                        <dt><i class="fas fa-square" style="color:#d9534f;"></i> Rectangle</dt><dd>Represents an Entity (e.g., PRODUCTS).</dd>
+                        <dt><i class="fas fa-gem" style="color:#0275d8;"></i> Diamond</dt><dd>Represents a Relationship between entities.</dd>
+                        <dt><i class="fas fa-circle" style="color:#5cb85c;"></i> Oval</dt><dd>Represents an Attribute of an entity.</dd>
+                        <dt><u>Underline</u></dt><dd>Indicates a Primary Key (PK) attribute.</dd>
+                    </dl>
+                </div>
+                <div class="legend-card" id="schema-legend">
+                    <h2><i class="fas fa-book-open"></i> Glossary</h2>
+                    <dl>
+                        <dt>PK (Primary Key)</dt><dd>A unique identifier for a record.</dd>
+                        <dt>FK (Foreign Key)</dt><dd>A key used to link two tables together.</dd>
+                        <dt>Collection</dt><dd>A group of documents, similar to a table in SQL.</dd>
+                        <dt>Singleton</dt><dd>A single document used for global configuration.</dd>
+                        <dt>Denormalization</dt><dd>Intentionally duplicating data to improve read performance.</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+
+        const entities = [
+            { id: "products", name: "PRODUCTS", type: "Collection", attributes: [{ name: "id", type: "pk", description: "Primary Key" }, { name: "name", type: "string", description: "Product Name" }, { name: "categoryId", type: "fk", description: "FK → categories.id" }, { name: "price", type: "number", description: "Price" }, { name: "stockQuantity", type: "number", description: "Stock Quantity" }] },
+            { id: "categories", name: "CATEGORIES", type: "Collection", attributes: [{ name: "id", type: "pk", description: "Primary Key" }, { name: "name", type: "string", description: "Category Name" }, { name: "description", type: "string", description: "Description" }] },
+            { id: "sales", name: "SALES", type: "Collection", attributes: [{ name: "id", type: "pk", description: "Primary Key" }, { name: "saleDate", type: "date", description: "Sale Date" }, { name: "totalAmount", type: "number", description: "Total Amount" }, { name: "items", type: "array", description: "Array of Products" }, { name: "appliedCoupon", type: "fk", description: "FK → coupons.id" }, { name: "cashierId", type: "fk", description: "FK → accessKeys.id" }] },
+            { id: "coupons", name: "COUPONS", type: "Collection", attributes: [{ name: "id", type: "pk", description: "Primary Key" }, { name: "code", type: "string", description: "Coupon Code" }, { name: "discountType", type: "string", description: "Discount Type" }, { name: "discountValue", type: "number", description: "Discount Value" }] },
+            { id: "accessKeys", name: "ACCESS KEYS", type: "Collection", attributes: [{ name: "id", type: "pk", description: "Primary Key" }, { name: "key", type: "string", description: "Access Key" }, { name: "tagName", type: "string", description: "Tag Name" }, { name: "isMasterKey", type: "boolean", description: "Is Master Key" }] },
+            { id: "settings", name: "SETTINGS", type: "Singleton", attributes: [{ name: "id", type: "pk", description: "'''store-settings'''" }, { name: "storeName", type: "string", description: "Store Name" }, { name: "defaultTaxRate", type: "number", description: "Default Tax Rate" }, { name: "baseCurrency", type: "string", description: "Base Currency" }] },
+            { id: "exchangeRates", name: "EXCHANGE RATES", type: "Collection", attributes: [{ name: "id", type: "pk", description: "Currency Code" }, { name: "rate", type: "number", description: "Exchange Rate" }, { name: "lastUpdated", type: "date", description: "Last Updated" }] }
+        ];
+
+        const relationships = [
+            { id: "belongs_to", name: "BELONGS TO", from: "products", to: "categories", type: "Identifying", cardinality: "N : 1", description: "Each Product belongs to one Category" },
+            { id: "has", name: "HAS", from: "categories", to: "products", type: "Non-identifying", cardinality: "1 : N", description: "Each Category can contain multiple Products" },
+            { id: "applies", name: "APPLIES", from: "sales", to: "coupons", type: "Optional", cardinality: "N : 0..1", description: "A Sale may apply one Coupon (optional)" },
+            { id: "conducted_by", name: "CONDUCTED BY", from: "sales", to: "accessKeys", type: "Non-identifying", cardinality: "N : 1", description: "Each Sale is processed by one Cashier" },
+            { id: "contains", name: "CONTAINS", from: "sales", to: "products", type: "Conceptual", cardinality: "M : N", description: "Each Sale contains multiple Products" },
+            { id: "uses_tax", name: "USES TAX RATE FROM", from: "sales", to: "settings", type: "Dependency", cardinality: "N : 1", description: "Sales calculations depend on settings.defaultTaxRate" },
+            { id: "uses_currency", name: "USES BASE CURRENCY FROM", from: "exchangeRates", to: "settings", type: "Dependency", cardinality: "N : 1", description: "All exchange rate conversions are based on settings.baseCurrency" }
+        ];
+
+        const erDiagram = `
+erDiagram
+    PRODUCTS }o--|| CATEGORIES : "BELONGS TO"
+    CATEGORIES ||--o{ PRODUCTS : "HAS"
+    SALES }o--o| COUPONS : "APPLIES"
+    SALES }|--|| ACCESS_KEYS : "CONDUCTED BY"
+    SALES }|--o{ PRODUCTS : "CONTAINS"
+    SALES }|--|| SETTINGS : "USES TAX RATE FROM"
+    EXCHANGE_RATES }|--|| SETTINGS : "USES BASE CURRENCY FROM"
+`;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('mermaid-panel').classList.add('active');
+            document.getElementById('mermaid-legend').classList.add('active');
+            
+            const diagramDiv = document.getElementById('mermaid-diagram');
+            diagramDiv.innerHTML = `<div class="mermaid">${erDiagram}</div>`;
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+            
+            renderDetailedErd();
+            renderEntityDetails();
+            renderRelationshipDetails();
+            
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            const viewButtons = document.querySelectorAll('.controls .btn');
+            const legendContainer = document.querySelector('.legend-container');
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebarOverlay = document.querySelector('.sidebar-overlay');
+
+            sidebarToggle.addEventListener('click', () => {
+                document.body.classList.toggle('sidebar-open');
+            });
+
+            sidebarOverlay.addEventListener('click', () => {
+                document.body.classList.remove('sidebar-open');
+            });
+
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        document.body.classList.remove('sidebar-open');
+                    }
+
+                    const targetPanelId = this.getAttribute('data-target');
+
+                    viewButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    document.querySelectorAll('.main-content .panel').forEach(panel => {
+                        panel.classList.remove('active');
+                    });
+                    const targetPanel = document.getElementById(targetPanelId);
+                    if (targetPanel) targetPanel.classList.add('active');
+
+                    // Handle Legends
+                    document.querySelectorAll('.legend-card').forEach(card => card.classList.remove('active'));
+                    let legendId;
+                    switch (targetPanelId) {
+                        case 'mermaid-panel':
+                            legendId = 'mermaid-legend';
+                            break;
+                        case 'detailed-erd-panel':
+                            legendId = 'detailed-erd-legend';
+                            break;
+                        case 'schema-details-panel':
+                        case 'entities-panel':
+                        case 'relationships-panel':
+                        case 'firestore-panel':
+                            legendId = 'schema-legend';
+                            break;
+                    }
+
+                    if (legendId) {
+                        const legendCard = document.getElementById(legendId);
+                        if (legendCard) {
+                            legendCard.classList.add('active');
+                            legendContainer.style.display = 'block';
+                        }
+                    } else {
+                        legendContainer.style.display = 'none';
+                    }
+
+
+                    if (targetPanelId === 'detailed-erd-panel') {
+                        const cy = document.getElementById('cy-container')._cy;
+                        if (cy) { cy.resize(); cy.fit(null, 30); }
+                    }
+                });
+            });
+        }
+
+        function renderEntityDetails() {
+            const container = document.querySelector(".entity-details");
+            if(!container) return;
+            container.innerHTML = '';
+            entities.forEach(entity => {
+                const card = document.createElement("div");
+                card.className = "entity-card";
+                card.innerHTML = `
+                    <div class="entity-header">
+                        <div class="entity-name">${entity.name}</div>
+                        <div class="entity-type">${entity.type}</div>
+                    </div>
+                    <div class="entity-attributes">
+                        ${entity.attributes.map(attr => `
+                            <div class="entity-attr">
+                                <span class="attr-name ${attr.type}">${attr.name}</span>
+                                <span class="attr-type">${attr.description}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderRelationshipDetails() {
+            const container = document.querySelector(".relationship-details");
+            if(!container) return;
+            container.innerHTML = '';
+            relationships.forEach(rel => {
+                const card = document.createElement("div");
+                card.className = "relationship-card";
+                card.innerHTML = `
+                    <div class="relationship-header">
+                        <div class="relationship-name">${rel.name}</div>
+                        <div class="cardinality">${rel.cardinality}</div>
+                    </div>
+                    <div class="relationship-info">
+                        <div class="info-item">
+                            <div class="info-label">From Entity</div>
+                            <div class="info-value">${rel.from}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">To Entity</div>
+                            <div class="info-value">${rel.to}</div>
+                        </div>
+                    </div>
+                    <div class="info-item" style="background: transparent; padding: 15px 0 0 0;">
+                        <div class="info-label">Description</div>
+                        <div class="info-value" style="font-size: 1rem; font-weight: 400;">${rel.description}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderDetailedErd() {
+            const container = document.getElementById('cy-container');
+            if (!container || container._cy) return;
+
+            const elements = [];
+            const relationshipSet = new Map();
+            relationships.forEach(r => { if (!relationshipSet.has(r.id)) relationshipSet.set(r.id, r); });
+
+            entities.forEach(entity => {
+                elements.push({ group: 'nodes', data: { id: `${entity.id}_compound`, type: 'entity_compound' } });
+                elements.push({ group: 'nodes', data: { id: entity.id, label: entity.name, type: 'entity', parent: `${entity.id}_compound` } });
+                entity.attributes.forEach(attr => {
+                    const attrId = `${entity.id}_${attr.name}`;
+                    elements.push({ group: 'nodes', data: { id: attrId, label: attr.name, type: 'attribute', parent: `${entity.id}_compound`, attrType: attr.type } });
+                    elements.push({ group: 'edges', data: { id: `edge_${attrId}`, source: entity.id, target: attrId, type: 'attr_edge' } });
+                });
+            });
+
+            relationshipSet.forEach(rel => {
+                elements.push({ group: 'nodes', data: { id: rel.id, label: rel.name, type: 'relationship' } });
+                const [fromCardinality, toCardinality] = rel.cardinality.split(' : ');
+                elements.push({ group: 'edges', data: { id: `edge_${rel.id}_${rel.from}`, source: rel.id, target: rel.from, label: fromCardinality, type: 'rel_edge' } });
+                elements.push({ group: 'edges', data: { id: `edge_${rel.id}_${rel.to}`, source: rel.id, target: rel.to, label: toCardinality, type: 'rel_edge' } });
+            });
+
+            const cy = cytoscape({
+                container: container,
+                elements: elements,
+                style: [
+                    { selector: 'node[type="entity_compound"]', style: { 'background-opacity': 0, 'border-width': 0, 'padding': '20px' } },
+                    { selector: 'node[type="entity"]', style: { 'shape': 'rectangle', 'background-color': '#d9534f', 'border-color': '#d43f3a', 'border-width': 2, 'label': 'data(label)', 'color': 'white', 'text-valign': 'center', 'text-halign': 'center', 'font-weight': 'bold', 'font-size': '16px', 'padding': '15px', 'width': 'label', 'height': 'label' } },
+                    { selector: 'node[type="relationship"]', style: { 'shape': 'diamond', 'background-color': '#0275d8', 'border-color': '#025aa5', 'border-width': 2, 'label': 'data(label)', 'color': 'white', 'text-valign': 'center', 'text-halign': 'center', 'font-size': '14px', 'text-wrap': 'wrap', 'text-max-width': '80px', 'padding': '20px', 'width': 'label', 'height': 'label' } },
+                    { selector: 'node[type="attribute"]', style: { 'shape': 'ellipse', 'background-color': '#5cb85c', 'border-color': '#4cae4c', 'border-width': 2, 'label': 'data(label)', 'color': 'white', 'text-valign': 'center', 'text-halign': 'center', 'font-size': '12px', 'font-weight': 'bold', 'padding': '12px', 'width': 'label', 'height': 'label' } },
+                    { selector: 'node[attrType="pk"]', style: { 'text-decoration': 'underline' } },
+                    { selector: 'edge[type="rel_edge"]', style: { 'width': 2, 'line-color': '#95a5a6', 'target-arrow-shape': 'none', 'curve-style': 'bezier', 'label': 'data(label)', 'font-size': '16px', 'font-weight': 'bold', 'color': '#2c3e50' } },
+                    { selector: 'edge[type="attr_edge"]', style: { 'width': 1.5, 'line-color': '#7f8c8d', 'target-arrow-shape': 'none', 'curve-style': 'bezier' } }
+                ],
+                layout: { name: 'cose', idealEdgeLength: 100, nodeOverlap: 20, refresh: 20, fit: true, padding: 50, randomize: false, componentSpacing: 100, nodeRepulsion: 4000, edgeElasticity: 100, nestingFactor: 5, gravity: 80, numIter: 1000, initialTemp: 200, coolingFactor: 0.95, minTemp: 1.0, gravityCompound: 200 }
+            });
+            container._cy = cy;
+        }
+
+    </script>
+</body>
+</html>
