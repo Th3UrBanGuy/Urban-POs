@@ -43,13 +43,7 @@ export default function LoginPage() {
     }
   }, [user, isUserLoading, router]);
 
-  const handleLogin = async () => {
-    setIsProcessing(true);
-    
-    // Clear any previous session permissions
-    sessionStorage.removeItem('userPermissions');
-
-    const handleSuccessfulLogin = (keyData: Partial<AccessKey>) => {
+  const handleSuccessfulLogin = async (keyData: Partial<AccessKey>) => {
       const permissions = {
         isMaster: keyData.isMasterKey || false,
         pages: keyData.permissions || [],
@@ -57,10 +51,16 @@ export default function LoginPage() {
       };
       sessionStorage.setItem('userPermissions', JSON.stringify(permissions));
       if (auth) {
-        initiateAnonymousSignIn(auth);
-        // The onAuthStateChanged listener in useUser and the useEffect above will handle the redirect.
+        await initiateAnonymousSignIn(auth);
+        router.push('/pos');
       }
     };
+
+  const handleLogin = async () => {
+    setIsProcessing(true);
+    
+    // Clear any previous session permissions
+    sessionStorage.removeItem('userPermissions');
 
     if (accessKey === masterKey) {
       handleSuccessfulLogin({ isMasterKey: true, tagName: 'Master Key' });

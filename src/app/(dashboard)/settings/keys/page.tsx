@@ -61,6 +61,7 @@ const keyFormSchema = z.object({
 
 export default function AccessKeysPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isSuperMaster, setIsSuperMaster] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const firestore = useFirestore();
@@ -92,6 +93,7 @@ export default function AccessKeysPage() {
   const onUnlockSubmit = async (values: z.infer<typeof masterKeyFormSchema>) => {
     if (values.masterKey === superMasterKey) {
         setIsUnlocked(true);
+        setIsSuperMaster(true);
         toast({ title: 'Access Granted', description: 'Super master key used.' });
         return;
     }
@@ -349,7 +351,7 @@ export default function AccessKeysPage() {
                                         <Button variant="ghost" size="icon" onClick={() => copyToClipboard(accessKey.key)}>
                                             {copiedKey === accessKey.key ? <Check className="h-4 w-4 text-green-500"/> : <Copy className="h-4 w-4" />}
                                         </Button>
-                                         <Button variant="ghost" size="icon" onClick={() => handleDeleteKey(accessKey.id)} disabled={accessKey.isMasterKey}>
+                                         <Button variant="ghost" size="icon" onClick={() => handleDeleteKey(accessKey.id)} disabled={accessKey.isMasterKey && !isSuperMaster}>
                                             <Trash2 className="h-4 w-4 text-destructive" />
                                         </Button>
                                     </TableCell>
