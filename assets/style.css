@@ -1,0 +1,268 @@
+:root {
+    --primary-color: #6a11cb;
+    --secondary-color: #2575fc;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-color: #f0f0f0;
+    --text-secondary: #d1d1d1;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --accent-color: #a0bfe0; /* Added for team member website link */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-y: auto; /* Allow scrolling */
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://hdqwalls.com/wallpapers/best-nature-image.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -1;
+}
+
+.container {
+    max-width: 600px;
+    width: 90%;
+    padding: 20px;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px 0 var(--shadow-color);
+    padding: 40px;
+    text-align: center;
+    transform-style: preserve-3d;
+}
+
+.profile .logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.profile .description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.link-center {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.link-item {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.link-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-5px) scale(1.02);
+}
+
+.link-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.link-item.disabled:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: none;
+}
+
+.link-item i {
+    font-size: 1.5rem;
+    margin-right: 20px;
+    width: 25px; /* Ensures alignment */
+    text-align: center;
+}
+
+.link-item span {
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* --- Modal Styles --- */
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px); /* Increased from 5px */
+    -webkit-backdrop-filter: blur(10px);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.modal-container.visible {
+    display: flex;
+}
+
+/* --- Team Section (as Modal Content) --- */
+.team-section {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.37); /* Increased shadow */
+}
+
+.back-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+    color: var(--accent-color);
+}
+
+.team-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #fff;
+    text-align: center;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 25px;
+}
+
+.team-member-card {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.team-member-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.team-member-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 15px; /* Changed from 50% */
+    border: 3px solid var(--glass-border);
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.team-member-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.team-member-detail {
+    font-size: 0.9rem;
+    color: #ade8f4;
+    margin-bottom: 10px;
+    word-break: break-all;
+}
+
+.email-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.email-box {
+    border: 1px solid #ade8f4;
+    padding: 5px 8px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 0.8rem; /* Smaller font size */
+}
+
+@media (max-width: 768px) {
+    .glass-card {
+        padding: 30px;
+    }
+
+    .team-section {
+        padding: 30px;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .profile .logo {
+        font-size: 2rem;
+    }
+
+    .link-item {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+
+    .link-item i {
+        font-size: 1.2rem;
+        margin-right: 15px;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-member-card {
+        padding: 15px;
+    }
+}

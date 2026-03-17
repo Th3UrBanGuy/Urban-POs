@@ -1,0 +1,397 @@
+{
+  "entities": {
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product sold in the store.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the product."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the product."
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock Keeping Unit - a unique identifier for inventory tracking."
+        },
+        "price": {
+          "type": "number",
+          "description": "Selling price of the product."
+        },
+        "cost": {
+          "type": "number",
+          "description": "Cost of the product."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product image.",
+          "format": "uri"
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to Category. (Relationship: Category 1:N Product)"
+        },
+        "stockQuantity": {
+          "type": "number",
+          "description": "Number of units currently in stock."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "categoryId",
+        "stockQuantity"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a category to which products belong.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the category."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the category."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "Sale": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Sale",
+      "type": "object",
+      "description": "Represents a sales transaction.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the sale."
+        },
+        "saleDate": {
+          "type": "string",
+          "description": "Date and time of the sale.",
+          "format": "date-time"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total amount of the sale."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Method of payment used (e.g., card, cash, mobile)."
+        }
+      },
+      "required": [
+        "id",
+        "saleDate",
+        "totalAmount",
+        "paymentMethod"
+      ]
+    },
+    "SaleItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SaleItem",
+      "type": "object",
+      "description": "Represents an item within a sales transaction.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the sale item."
+        },
+        "saleId": {
+          "type": "string",
+          "description": "Reference to Sale. (Relationship: Sale 1:N SaleItem)"
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N SaleItem)"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity of the product sold in this sale item."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "Price of a single unit of the product at the time of sale."
+        }
+      },
+      "required": [
+        "id",
+        "saleId",
+        "productId",
+        "quantity",
+        "unitPrice"
+      ]
+    },
+    "Coupon": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Coupon",
+      "type": "object",
+      "description": "Represents a discount coupon.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the coupon."
+        },
+        "code": {
+          "type": "string",
+          "description": "The coupon code that the customer enters."
+        },
+        "discountPercentage": {
+          "type": "number",
+          "description": "The discount percentage for the coupon (e.g., 10 for 10%)."
+        },
+        "expirationDate": {
+          "type": "string",
+          "description": "The date when the coupon expires.",
+          "format": "date-time"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether the coupon is currently active and can be used."
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "discountPercentage",
+        "expirationDate",
+        "isActive"
+      ]
+    },
+    "ReorderSuggestion": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ReorderSuggestion",
+      "type": "object",
+      "description": "Represents a suggestion for reordering products based on sales trends.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the reorder suggestion."
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N ReorderSuggestion)"
+        },
+        "suggestedQuantity": {
+          "type": "number",
+          "description": "The quantity of the product suggested for reordering."
+        },
+        "reorderDate": {
+          "type": "string",
+          "description": "The suggested date for placing the reorder.",
+          "format": "date-time"
+        },
+        "reason": {
+          "type": "string",
+          "description": "The reason or explanation for the reorder suggestion (e.g., based on sales trends, low stock)."
+        }
+      },
+      "required": [
+        "id",
+        "productId",
+        "suggestedQuantity",
+        "reorderDate",
+        "reason"
+      ]
+    },
+    "ExchangeRate": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ExchangeRate",
+      "type": "object",
+      "description": "Represents the exchange rate between two currencies.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the exchange rate."
+        },
+        "baseCurrency": {
+          "type": "string",
+          "description": "The base currency (e.g., USD)."
+        },
+        "targetCurrency": {
+          "type": "string",
+          "description": "The target currency (e.g., EUR)."
+        },
+        "rate": {
+          "type": "number",
+          "description": "The exchange rate between the base and target currencies."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "The date and time when the exchange rate was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "baseCurrency",
+        "targetCurrency",
+        "rate",
+        "lastUpdated"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "user",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user-specific data. This path enforces path-based ownership.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores product category data.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "The unique identifier for the category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product data.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/sales/{saleId}",
+        "definition": {
+          "entityName": "Sale",
+          "schema": {
+            "$ref": "#/backend/entities/Sale"
+          },
+          "description": "Stores sale transaction data.",
+          "params": [
+            {
+              "name": "saleId",
+              "description": "The unique identifier for the sale."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/sales/{saleId}/saleItems/{saleItemId}",
+        "definition": {
+          "entityName": "SaleItem",
+          "schema": {
+            "$ref": "#/backend/entities/SaleItem"
+          },
+          "description": "Stores individual items within a sale transaction.",
+          "params": [
+            {
+              "name": "saleId",
+              "description": "The unique identifier for the sale."
+            },
+            {
+              "name": "saleItemId",
+              "description": "The unique identifier for the sale item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/coupons/{couponId}",
+        "definition": {
+          "entityName": "Coupon",
+          "schema": {
+            "$ref": "#/backend/entities/Coupon"
+          },
+          "description": "Stores coupon data.",
+          "params": [
+            {
+              "name": "couponId",
+              "description": "The unique identifier for the coupon."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/reorderSuggestions/{reorderSuggestionId}",
+        "definition": {
+          "entityName": "ReorderSuggestion",
+          "schema": {
+            "$ref": "#/backend/entities/ReorderSuggestion"
+          },
+          "description": "Stores reorder suggestion data.",
+          "params": [
+            {
+              "name": "reorderSuggestionId",
+              "description": "The unique identifier for the reorder suggestion."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/exchangeRates/{exchangeRateId}",
+        "definition": {
+          "entityName": "ExchangeRate",
+          "schema": {
+            "$ref": "#/backend/entities/ExchangeRate"
+          },
+          "description": "Stores exchange rate data.  Initially allows global read access.",
+          "params": [
+            {
+              "name": "exchangeRateId",
+              "description": "The unique identifier for the exchange rate."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to address the 'Missing or insufficient permissions' error by ensuring authorization independence and proper data segregation. The error indicates a 'list' operation on the 'exchangeRates' collection is failing. To resolve this, we will adjust the data structure and security rules to allow listing of exchange rates, assuming they are intended to be publicly accessible, or restrict access based on a clear authorization model.\n\nThe design incorporates the following:\n\n1.  **Authorization Independence:**  Since the error arises from listing 'exchangeRates', and given the application context, we'll assume these rates are globally accessible. Therefore, no denormalization is needed for authorization purposes within this collection.  If access control is required, a 'roles' subcollection under each 'exchangeRate' document could manage user-specific permissions, but for global access, this is unnecessary.\n\n2.  **Structural Segregation:**  The 'exchangeRates' collection is segregated, implying its data has a homogeneous security posture (either fully public or controlled by a specific administrative role).\n\n3.  **Access Modeling:** For 'exchangeRates', we're implementing a global read-access model initially.  If future requirements dictate restricted access, a role-based system (e.g., an 'admin' role) can be introduced without major structural changes.\n\n4.  **QAPs (Rules are not Filters):** The structure allows secure 'list' operations on 'exchangeRates'. If further restrictions are needed, additional checks based on document content can be added to the security rules.\n\n5. **Other Collections:** The other collections (`categories`, `products`, `sales`, etc.) are structured to provide a foundation for other operations.\n    *   User data is stored under `/users/{userId}` for private data.\n    *   Product categories are stored under `/categories`.\n    *   Products are stored under `/products`.\n    *   Sales and SaleItems are stored under `/sales/{saleId}/saleItems/{saleItemId}` allowing for easy querying of sale items related to a particular sale.\n    *   Coupons are stored under `/coupons`.\n    *   ReorderSuggestions are stored under `/reorderSuggestions`\n\nThis design prioritizes clarity, scalability, and debuggability, aligning with the core design principles."
+  }
+}

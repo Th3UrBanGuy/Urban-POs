@@ -1,0 +1,52 @@
+{
+  "placeholderImages": [
+    {
+      "id": "coffee-cup",
+      "description": "A cup of freshly brewed coffee.",
+      "imageUrl": "https://picsum.photos/seed/101/400/300",
+      "imageHint": "coffee cup"
+    },
+    {
+      "id": "club-sandwich",
+      "description": "A delicious club sandwich with multiple layers.",
+      "imageUrl": "https://picsum.photos/seed/102/400/300",
+      "imageHint": "club sandwich"
+    },
+    {
+      "id": "chocolate-croissant",
+      "description": "A flaky chocolate croissant.",
+      "imageUrl": "https://picsum.photos/seed/103/400/300",
+      "imageHint": "chocolate croissant"
+    },
+    {
+      "id": "iced-latte",
+      "description": "A refreshing iced latte.",
+      "imageUrl": "https://picsum.photos/seed/104/400/300",
+      "imageHint": "iced latte"
+    },
+    {
+      "id": "avocado-toast",
+      "description": "Healthy and tasty avocado toast.",
+      "imageUrl": "https://picsum.photos/seed/105/400/300",
+      "imageHint": "avocado toast"
+    },
+    {
+      "id": "blueberry-muffin",
+      "description": "A sweet blueberry muffin.",
+      "imageUrl": "https://picsum.photos/seed/106/400/300",
+      "imageHint": "blueberry muffin"
+    },
+    {
+      "id": "bagel-cream-cheese",
+      "description": "A classic bagel with cream cheese.",
+      "imageUrl": "https://picsum.photos/seed/107/400/300",
+      "imageHint": "bagel cream"
+    },
+    {
+      "id": "fruit-smoothie",
+      "description": "A vibrant and healthy fruit smoothie.",
+      "imageUrl": "https://picsum.photos/seed/108/400/300",
+      "imageHint": "fruit smoothie"
+    }
+  ]
+}
